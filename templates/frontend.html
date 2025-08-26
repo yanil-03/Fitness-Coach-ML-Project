@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Exercise & Diet Recommendation</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f7f8;
+      color: #333;
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #1e90ff;
+      margin-bottom: 1.5rem;
+    }
+    form {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 0 6px rgba(30,144,255,0.1);
+    }
+    label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-weight: 600;
+    }
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 1rem;
+    }
+    button {
+      background: #1e90ff;
+      border: none;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      width: 100%;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #0b6cd1;
+    }
+    .result {
+      margin-top: 1.5rem;
+      background: #def1ff;
+      border-left: 4px solid #1e90ff;
+      padding: 1rem;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Exercise & Diet Recommendation</h1>
+  <form id="recommendation-form">
+    <label for="sex">Sex</label>
+    <select id="sex" name="sex" required>
+      <option value="" disabled selected>Select Sex</option>
+      <option value="1">Male</option>
+      <option value="0">Female</option>
+    </select>
+
+    <label for="age">Age (years)</label>
+    <input type="number" id="age" name="age" min="10" max="100" required />
+
+    <label for="height">Height (cm)</label>
+    <input type="number" id="height" name="height" min="50" max="250" required />
+
+    <label for="weight">Weight (kg)</label>
+    <input type="number" id="weight" name="weight" min="20" max="300" required />
+
+    <label for="bmi">BMI</label>
+    <input type="number" step="0.1" id="bmi" name="bmi" required readonly />
+
+    <label for="hypertension">Hypertension</label>
+    <select id="hypertension" name="hypertension" required>
+      <option value="" disabled selected>Select Option</option>
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </select>
+
+    <label for="diabetes">Diabetes</label>
+    <select id="diabetes" name="diabetes" required>
+      <option value="" disabled selected>Select Option</option>
+      <option value="0">No</option>
+      <option value="1">Yes</option>
+    </select>
+
+    
+    <label for="level">Body Type</label>
+    <select id="level" name="level" required>
+      <option value="" disabled selected>Select Level</option>
+      <option value="2">Overweight</option>
+      <option value="0">Normal</option>
+      <option value="1">Obuse</option>
+      <option value="3">Underweight</option>
+    </select>
+
+    <label for="fitness_goal">Fitness Goal</label>
+    <select id="fitness_goal" name="fitness_goal" required>
+      <option value="" disabled selected>Select Goal</option>
+      <option value="1">Lose Weight</option>
+      <option value="0">Gain Muscle</option>
+    </select>
+
+    <label for="fitness_type">Fitness Type</label>
+    <select id="fitness_type" name="fitness_type" required>
+      <option value="" disabled selected>Select Type</option>
+      <option value="0">Cardio</option>
+      <option value="1">Strength</option>
+      
+    </select>
+
+    <button type="submit">Get Recommendation</button>
+  </form>
+
+  <div id="result" class="result" style="display:none;"></div>
+  <script>
+  document.getElementById('recommendation-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const form = event.target;
+    const data = {
+      Sex: parseInt(form.sex.value),
+      Age: parseInt(form.age.value),
+      Height: parseInt(form.height.value),
+      Weight: parseInt(form.weight.value),
+      Hypertension: parseInt(form.hypertension.value),
+      Diabetes: parseInt(form.diabetes.value),
+      BMI: parseFloat(form.bmi.value),
+      Level: parseInt(form.level.value),
+      Fitness_Goal: parseInt(form.fitness_goal.value),
+      Fitness_Type: parseInt(form.fitness_type.value)
+    };
+
+    const resultDiv = document.getElementById('result');
+    resultDiv.style.display = 'block';
+    resultDiv.textContent = 'Loading...';
+
+    try {
+      const response = await fetch('http://127.0.0.1:5000/predict', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user_features: data }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+
+      // Expecting backend response like:
+      // { "decoded_exercise": "Squats, Pushups...", "decoded_diet": "High protein diet..." }
+      resultDiv.innerHTML = `
+        <h3>Recommended Exercise Plan:</h3>
+        <p>${result.exercise_prediction}</p>
+        <h3>Recommended Diet Plan:</h3>
+        <p>${result.diet_prediction}</p>
+      `;
+
+    } catch (error) {
+      resultDiv.textContent = 'Error: ' + error.message;
+    }
+  });
+  </script>
+
+  <script>
+function calculateBMI() {
+  const height = parseFloat(document.getElementById('height').value);
+  const weight = parseFloat(document.getElementById('weight').value);
+  const bmiInput = document.getElementById('bmi');
+  if (height && weight) {
+    const bmi = weight / ((height / 100) * (height / 100));
+    bmiInput.value = bmi.toFixed(1);
+  } else {
+    bmiInput.value = '';
+  }
+}
+
+document.getElementById('height').addEventListener('input', calculateBMI);
+document.getElementById('weight').addEventListener('input', calculateBMI);
+</script>
+
+
+</body>
+</html>
+      

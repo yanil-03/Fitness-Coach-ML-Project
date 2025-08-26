@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Prediction Frontend</title>
+</head>
+<body>
+    <h1>Enter Input Data</h1>
+    <form id="predictForm">
+        <input type="text" id="inputData" placeholder="Enter comma-separated numbers" />
+        <button type="submit">Predict</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('predictForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const inputStr = document.getElementById('inputData').value;
+            // Convert input string into array of numbers
+            const inputArr = inputStr.split(',').map(Number);
+            fetch('/predict', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({input: inputArr})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.error) {
+                    document.getElementById('result').innerText = 'Error: ' + data.error;
+                } else {
+                    document.getElementById('result').innerText = 'Exercise Prediction: ' + data.exercise_prediction + 
+                        '\nDiet Prediction: ' + data.diet_prediction;
+                }
+            })
+            .catch(error => {
+                document.getElementById('result').innerText = 'Fetch error: ' + error;
+            });
+        });
+    </script>
+</body>
+</html>
