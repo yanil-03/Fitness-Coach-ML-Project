@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Health & Fitness Advisor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            /* background: linear-gradient(120deg, #FFA963, #AAB9F6 60%, #65CA9A); */
+            background: #f4f7f8 url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center center fixed;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 40px auto 0 auto;
+            background: none;
+            box-sizing: border-box;
+            padding-bottom: 50px;
+        }
+        .advisor-header {
+            text-align: center;
+            margin-top: 48px;
+            color: #9c0f51db;
+            background: rgba(240, 238, 238, 0.136);
+            border-radius: 18px;
+            box-shadow: 0 6px 32px 0 rgba(15, 15, 15, 0.637);
+            padding: 35px 32px 32px 32px;
+            /* flex: 1 1 350px;
+            min-width: 330px;
+            max-width: 450px; */
+        }
+        .icon-circle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .icon-circle svg {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at 60% 40%, #b1e1fa 50%, #497bfe 100%);
+            border-radius: 50%;
+            padding: 10px;
+        }
+        .advisor-header h1 {
+            margin: 0;
+            font-size: 2.8rem;
+            font-weight: bold;
+            letter-spacing: -2px;
+        }
+        .advisor-header h1 span {
+            color: #61c491;
+        }
+        .advisor-header p {
+            margin: 14px auto 0 auto;
+            font-size: 1.15rem;
+            opacity: 0.95;
+            max-width: 500px;
+        }
+        .form-panel {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 35px;
+        }
+        .form-section {
+            background: rgba(255, 255, 255, 0.90);
+            border-radius: 18px;
+            box-shadow: 0 6px 32px 0 rgba(15, 15, 15, 0.637);
+            padding: 35px 32px 32px 32px;
+            flex: 1 1 350px;
+            min-width: 330px;
+            max-width: 450px;
+        }
+        .form-section h2 {
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            font-size: 1.35rem;
+            margin-bottom: 22px;
+        }
+        .form-section h2 .icon {
+            margin-right: 10px;
+        }
+        .form-section.blue h2 {
+            color: #1786d1;
+        }
+        .form-section.green h2 {
+            color: #30b070;
+        }
+        .form-group {
+            margin-bottom: 19px;
+        }
+        .form-group label {
+            font-weight: 500;
+            font-size: 1rem;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 10px;
+            border: 1.3px solid #dcdcdd;
+            border-radius: 7px;
+            font-size: 1rem;
+            background: #f5f6fa;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #61c491;
+        }
+        .bmi-calc {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .get-ai-btn {
+            margin-top: 28px;
+            width: 100%;
+            background: linear-gradient(90deg, #6788c2, #94f4e1);
+            
+            color: #fff;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 15px 0;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px 0 rgba(11, 11, 11, 0.686);
+            cursor: pointer;
+            transition: filter 0.18s, background 0.18s;
+        }
+        .get-ai-btn:hover {
+            background: linear-gradient(90deg, #3880ff, #1ae5be);
+            filter: brightness(0.96);
+            box-shadow: 0 3px 10px 0 rgba(249, 249, 249, 0);
+        }
+        @media (max-width: 920px) {
+            .form-panel {
+                flex-direction: column;
+                align-items: center;
+            }
+            .form-section {
+                width: 100%;
+                max-width: 550px;
+            }
+            .advisor-header h1 {
+                font-size: 2.1rem;
+            }
+        }
+
+        .result {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-align: center;
+            margin-top: 48px;
+            color: #f9f7f8;
+            background: linear-gradient(90deg, rgba(255, 0, 0, 0.816), rgba(0, 0, 255, 0.816));
+            filter: brightness(1);
+            border-radius: 18px;
+            box-shadow: 0 6px 32px 0 rgba(15, 15, 15, 0.637);
+            padding: 35px 32px 32px 32px;
+            /* margin-top: 1.5rem;
+            background: #def1ff;
+            border-left: 4px solid #1e90ff;
+            padding: 1rem;
+            border-radius: 4px; */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="advisor-header">
+            <div class="icon-circle">
+                <!-- Placeholder SVG Pulse Icon -->
+                <svg viewBox="0 0 50 50" fill="none"><circle cx="25" cy="25" r="24" stroke="#4fbbe3" stroke-width="2"/><polyline points="13,28 19,20 27,38 35,13" fill="none" stroke="#3880ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="35" cy="13" r="2.2" fill="#1ae5be"/></svg>
+            </div>
+            <h1>Health &amp; Fitness <span>Advisor</span></h1>
+            <p>
+                Get personalized exercise and diet recommendations powered by AI based on your unique health profile
+            </p>
+        </div>
+        <form id = 'recommendation-form'>
+            <div class="form-panel">
+                <!-- Basic Information -->
+                <div class="form-section blue">
+                    <h2>
+                        <span class="icon">👤</span>
+                        Basic Information
+                    </h2>
+                    <div class="form-group">
+                        <label for="sex">Sex</label>
+                        <select id="sex" name="sex" required>
+                            <option value="" disabled selected>Select Sex</option>
+                            <option value="1">Male</option>
+                            <option value="0">Female</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="age">Age (years)</label>
+                        <input type="number" id="age" name="age" placeholder="Enter your Age" min="10" max="100" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="height">Height (cm)</label>
+                        <input type="number" id="height" name="height" min="50" max="250" placeholder="Enter your height" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="weight">Weight (kg)</label>
+                        <input type="number" id="weight" name="weight" min="20" max="300" placeholder="Enter your weight" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bmi">BMI (Auto-calculated)</label>
+                        <div class="bmi-calc">
+                            <input type="text" step="'0.1" id="bmi" name="bmi" placeholder="" readonly>
+                            <span title="Body Mass Index is calculated automatically" style="cursor:help;">&#8505;</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Health & Fitness -->
+                <div class="form-section green">
+                    <h2>
+                        <span class="icon">💚</span>
+                        Health &amp; Fitness
+                    </h2>
+                    <div class="form-group">
+                        <label for="hypertension">Hypertension</label>
+                        <select id="hypertension" name="hypertension" required>
+                            <option value="" disabled selected>Select option</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="diabetes">Diabetes</label>
+                        <select id="diabetes" name="diabetes" required>
+                            <option value="">Select option</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="level">Body Type</label>
+                        <select id="level" name="level" required>
+                            <option value="" disabled selected>Select body type</option>
+                            <option value="0">Normal</option>
+                            <option value="1">Obuse</option>
+                            <option value="2">Overweight</option>
+                            <option value="3">Underweight</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="fitness_goal">Fitness Goal</label>
+                        <select id="fitness_goal" name="fitness_goal" required>
+                            <option value=""  disabled selected>Select goal</option>
+                            <option value="1">Lose Weight</option>
+                            <option value="0">Gain Muscle</option>
+                            
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="fitness_type">Fitness Type</label>
+                        <select id="fitness_type" name="fitness_type" required>
+                            <option value="">Select type</option>
+                            <option value="0">Cardio</option>
+                            <option value="1">Strength</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <!-- Submit Button -->
+            <div style="max-width: 910px; margin: 25px auto 0 auto; display: flex;">
+                <button type="submit" class="get-ai-btn">
+                    ⚡ Get My AI Recommendations
+                </button>
+            </div>
+        </form>
+        <div id="result" class="result" style="display:none;"></div>
+    </div>
+    <script>
+        document.getElementById('recommendation-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const data = {
+            Sex: parseInt(form.sex.value),
+            Age: parseInt(form.age.value),
+            Height: parseInt(form.height.value),
+            Weight: parseInt(form.weight.value),
+            Hypertension: parseInt(form.hypertension.value),
+            Diabetes: parseInt(form.diabetes.value),
+            BMI: parseFloat(form.bmi.value),
+            Level: parseInt(form.level.value),
+            Fitness_Goal: parseInt(form.fitness_goal.value),
+            Fitness_Type: parseInt(form.fitness_type.value)
+            };
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.textContent = 'Loading...';
+
+            try {
+            const response = await fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ user_features: data }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const result = await response.json();
+
+            // Expecting backend response like:
+            // { "decoded_exercise": "Squats, Pushups...", "decoded_diet": "High protein diet..." }
+            resultDiv.innerHTML = `
+                <h3>Recommended Exercise Plan:</h3>
+                <p>${result.exercise_prediction}</p>
+                <h3>Recommended Diet Plan:</h3>
+                <p>${result.diet_prediction}</p>
+            `;
+
+            } catch (error) {
+            resultDiv.textContent = 'Error: ' + error.message;
+            }
+        });
+    </script>
+    
+
+  <script>
+    function calculateBMI() {
+    const height = parseFloat(document.getElementById('height').value);
+    const weight = parseFloat(document.getElementById('weight').value);
+    const bmiInput = document.getElementById('bmi');
+    if (height && weight) {
+        const bmi = weight / ((height / 100) * (height / 100));
+        bmiInput.value = bmi.toFixed(1);
+    } else {
+        bmiInput.value = '';
+    }
+    }
+
+    document.getElementById('height').addEventListener('input', calculateBMI);
+    document.getElementById('weight').addEventListener('input', calculateBMI);
+ </script>
+
+</body>
+</html>

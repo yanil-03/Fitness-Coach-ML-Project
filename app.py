@@ -11,7 +11,7 @@ exercise_model = joblib.load('rf_ex_model.pkl')
 
 @app.route('/')
 def home():
-    return render_template('frontend.html')  # Render the frontend page
+    return render_template('index2.html')  # Render the frontend page
 
 @app.route('/predict', methods=['POST'])
 def predict():
